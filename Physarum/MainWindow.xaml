@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Physarum"
+        xmlns:vm="clr-namespace:Physarum.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="MainWindow" Height="auto" Width="auto">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    <StackPanel Margin="10">
+        <Button Content="Start" Command="{Binding StartCmd}"/>
+    </StackPanel>
 </Window>
