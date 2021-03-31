@@ -10,4 +10,13 @@
     <ProjectReference Include="..\ObjectTK\ObjectTK.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\Shaders\Physarum.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Shaders\RenderShader.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
