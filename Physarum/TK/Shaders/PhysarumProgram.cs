@@ -13,5 +13,6 @@ namespace Physarum.TK.Shaders
         public ImageUniform Texture { get; set; }
         public Uniform<int> Width { get; set; }
         public Uniform<int> Height { get; set; }
+        public Uniform<float[]> Agents { get; set; }
     }
 }

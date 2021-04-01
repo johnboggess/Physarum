@@ -26,8 +26,10 @@ namespace Physarum.TK
         RenderProgram _renderProgram;
         PhysarumProgram _physarumProgram;
 
-        int _width = 50;
-        int _height = 50;
+        int _width = 500;
+        int _height = 500;
+        int _numberOfAgents = 100;
+        const int _localWorkGroupSize = 100;
 
         public TKWindow() : base(GameWindowSettings.Default, NativeWindowSettings.Default)
         {
@@ -64,6 +66,11 @@ namespace Physarum.TK
             _physarumProgram.Width.Set(_width);
             _physarumProgram.Height.Set(_height);
 
+            Agent[] a = Agent.RandomAgents(_numberOfAgents, new Vector2(_width/2, _height/2), _width/4);
+            float[] f = Agent.AgentArrayToFloatArray(a);
+
+            _physarumProgram.Agents.Set(f);
+
             _renderProgram = ObjectTK.Shaders.ProgramFactory.Create<RenderProgram>();
             _renderProgram.Use();
             _renderProgram.Texture.Set(TextureUnit.Texture0);
@@ -90,7 +97,7 @@ namespace Physarum.TK
             GL.Clear(ClearBufferMask.ColorBufferBit);
             
             _physarumProgram.Use();
-            PhysarumProgram.Dispatch(_width/10, _height/10, 1);
+            PhysarumProgram.Dispatch(_localWorkGroupSize / 100, 1, 1);
 
             _renderProgram.Use();
             _screen.DrawElements(PrimitiveType.Triangles, indexBuffer.ElementCount);

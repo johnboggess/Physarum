@@ -67,7 +67,9 @@ namespace ObjectTK.Shaders.Variables
                 new Map<Matrix3x2>((_, matrix) => GL.UniformMatrix3x2(_, 1, false, new float[] { matrix.M11, matrix.M12, matrix.M21, matrix.M22, matrix.M31, matrix.M32 })),
                 new Map<Matrix3x4>((_, matrix) => GL.UniformMatrix3x4(_, 1, false, new float[] { matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34 })),
                 new Map<Matrix4x2>((_, matrix) => GL.UniformMatrix4x2(_, 1, false, new float[] { matrix.M11, matrix.M12, matrix.M21, matrix.M22, matrix.M31, matrix.M32, matrix.M41, matrix.M42 })),
-                new Map<Matrix4x3>((_, matrix) => GL.UniformMatrix4x3(_, 1, false, new float[] { matrix.M11, matrix.M12, matrix.M13, matrix.M21, matrix.M22, matrix.M23, matrix.M31, matrix.M32, matrix.M33, matrix.M41, matrix.M42, matrix.M43 }))
+                new Map<Matrix4x3>((_, matrix) => GL.UniformMatrix4x3(_, 1, false, new float[] { matrix.M11, matrix.M12, matrix.M13, matrix.M21, matrix.M22, matrix.M23, matrix.M31, matrix.M32, matrix.M33, matrix.M41, matrix.M42, matrix.M43 })),
+
+                new Map<float[]>((_, array) => GL.Uniform1(_, array.Length, array))
             };
         }
 
