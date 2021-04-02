@@ -9,6 +9,7 @@ using OpenTK.Windowing.Desktop;
 using ObjectTK.Textures;
 
 using ObjectTK.Buffers;
+using ObjectTK.Shaders.Variables;
 
 using Physarum.TK.Shaders;
 
@@ -24,10 +25,12 @@ namespace Physarum.TK
         Texture2D _physarumOut;
 
         RenderProgram _renderProgram;
-        PhysarumProgram _physarumProgram;
+        AgentProgram _physarumProgram;
+        Buffer<float> _agents;
 
         int _width = 500;
         int _height = 500;
+        float _speed = 1;
         int _numberOfAgents = 100;
         const int _localWorkGroupSize = 100;
 
@@ -60,16 +63,18 @@ namespace Physarum.TK
             _physarumOut.SetFilter(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
             _physarumOut.Bind(TextureUnit.Texture0);
 
-            _physarumProgram = ObjectTK.Shaders.ProgramFactory.Create<PhysarumProgram>();
+            _physarumProgram = ObjectTK.Shaders.ProgramFactory.Create<AgentProgram>();
             _physarumProgram.Use();
             _physarumProgram.Texture.Bind(0, _physarumOut, TextureAccess.ReadWrite);
             _physarumProgram.Width.Set(_width);
             _physarumProgram.Height.Set(_height);
+            _physarumProgram.Speed.Set(_speed);
 
             Agent[] a = Agent.RandomAgents(_numberOfAgents, new Vector2(_width/2, _height/2), _width/4);
             float[] f = Agent.AgentArrayToFloatArray(a);
-
-            _physarumProgram.Agents.Set(f);
+            _agents = new Buffer<float>();
+            _agents.Init(BufferTarget.ArrayBuffer, f);
+            _physarumProgram.Agents.BindBuffer<float>(_agents);
 
             _renderProgram = ObjectTK.Shaders.ProgramFactory.Create<RenderProgram>();
             _renderProgram.Use();
@@ -97,7 +102,7 @@ namespace Physarum.TK
             GL.Clear(ClearBufferMask.ColorBufferBit);
             
             _physarumProgram.Use();
-            PhysarumProgram.Dispatch(_localWorkGroupSize / 100, 1, 1);
+            AgentProgram.Dispatch(_localWorkGroupSize / 100, 1, 1);
 
             _renderProgram.Use();
             _screen.DrawElements(PrimitiveType.Triangles, indexBuffer.ElementCount);

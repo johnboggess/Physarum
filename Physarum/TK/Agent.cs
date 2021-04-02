@@ -25,7 +25,7 @@ namespace Physarum.TK
 
             for (int i = 0; i < numberOfAgents; i++)
             {
-                double dir = (random.NextDouble() * 360d);
+                double dir = (random.NextDouble() * Math.PI * 2d);
                 double dist = random.NextDouble() * positionRange;
                 double x = Math.Cos(dir) * dist;
                 double y = Math.Sin(dir) * dist;

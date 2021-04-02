@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\Shaders\Physarum.glsl">
+    <None Update="Data\Shaders\AgentShader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\Shaders\RenderShader.glsl">

@@ -7,12 +7,13 @@ using ObjectTK.Shaders.Sources;
 using ObjectTK.Shaders.Variables;
 namespace Physarum.TK.Shaders
 {
-    [ComputeShaderSource("Physarum.Physarum")]
-    public class PhysarumProgram : ComputeProgram
+    [ComputeShaderSource("AgentShader.Agent")]
+    public class AgentProgram : ComputeProgram
     {
         public ImageUniform Texture { get; set; }
         public Uniform<int> Width { get; set; }
         public Uniform<int> Height { get; set; }
-        public Uniform<float[]> Agents { get; set; }
+        public Uniform<float> Speed { get; set; }
+        public ShaderStorage Agents { get; set; }
     }
 }
