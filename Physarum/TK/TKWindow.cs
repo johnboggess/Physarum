@@ -32,9 +32,11 @@ namespace Physarum.TK
         int _width = 500;
         int _height = 500;
         float _speed = 1;
-        float _evaporation = .1f;
-        int _numberOfAgents = 100;
+        float _evaporation = .01f;
+        int _numberOfAgents = 1000;
         const int _localWorkGroupSize = 100;
+        int _iteration = 0;
+        float _randomDirection = .25f;
 
         public TKWindow() : base(GameWindowSettings.Default, NativeWindowSettings.Default)
         {
@@ -71,6 +73,8 @@ namespace Physarum.TK
             _agentProgram.Width.Set(_width);
             _agentProgram.Height.Set(_height);
             _agentProgram.Speed.Set(_speed);
+            _agentProgram.Iteration.Set(_iteration);
+            _agentProgram.RandomDirection.Set(_randomDirection);
 
             Agent[] a = Agent.RandomAgents(_numberOfAgents, new Vector2(_width/2, _height/2), _width/4);
             float[] f = Agent.AgentArrayToFloatArray(a);
@@ -83,7 +87,7 @@ namespace Physarum.TK
             _dispersionProgram.Texture.Bind(0, _physarumOut, TextureAccess.ReadWrite);
             _dispersionProgram.Width.Set(_width);
             _dispersionProgram.Height.Set(_height);
-            _dispersionProgram.Evaporation.Set(0.01f);
+            _dispersionProgram.Evaporation.Set(_evaporation);
 
             _renderProgram = ObjectTK.Shaders.ProgramFactory.Create<RenderProgram>();
             _renderProgram.Use();
@@ -111,12 +115,17 @@ namespace Physarum.TK
             GL.Clear(ClearBufferMask.ColorBufferBit);
             
             _agentProgram.Use();
-            AgentProgram.Dispatch(_localWorkGroupSize / 100, 1, 1);
+            _agentProgram.Iteration.Set(_iteration);
+            AgentProgram.Dispatch(_numberOfAgents / _localWorkGroupSize, 1, 1);
             _dispersionProgram.Use();
             DispersionProgram.Dispatch(_width / 10, _height / 10, 1);
 
             _renderProgram.Use();
             _screen.DrawElements(PrimitiveType.Triangles, indexBuffer.ElementCount);
+
+            _iteration += 1;
+            _iteration %= int.MaxValue;
+
             SwapBuffers();
         }
     }

@@ -14,6 +14,8 @@ namespace Physarum.TK.Shaders
         public Uniform<int> Width { get; set; }
         public Uniform<int> Height { get; set; }
         public Uniform<float> Speed { get; set; }
+        public Uniform<int> Iteration { get; set; }
+        public Uniform<float> RandomDirection { get; set; }
         public ShaderStorage Agents { get; set; }
     }
 }

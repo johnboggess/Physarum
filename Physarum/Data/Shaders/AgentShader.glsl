@@ -7,6 +7,8 @@ uniform writeonly image2D Texture;
 uniform int Width;
 uniform int Height;
 uniform float Speed;
+uniform int Iteration;
+uniform float RandomDirection;
 
 layout(std430, binding = 3) buffer Agents
 {
@@ -57,7 +59,7 @@ vec2 getVelocity(uint agent)
 {
 	float x = getX(agent);
 	float y = getY(agent);
-	float dir = getDir(agent);
+	float dir = getDir(agent) + (rand(vec2(x+Iteration,y+Iteration))*2f - 1f) * RandomDirection;
 	
 	vec2 vel = vec2(cos(dir), sin(dir))*Speed;
 
