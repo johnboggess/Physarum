@@ -25,12 +25,14 @@ namespace Physarum.TK
         Texture2D _physarumOut;
 
         RenderProgram _renderProgram;
-        AgentProgram _physarumProgram;
+        AgentProgram _agentProgram;
+        DispersionProgram _dispersionProgram;
         Buffer<float> _agents;
 
         int _width = 500;
         int _height = 500;
         float _speed = 1;
+        float _evaporation = .1f;
         int _numberOfAgents = 100;
         const int _localWorkGroupSize = 100;
 
@@ -63,18 +65,25 @@ namespace Physarum.TK
             _physarumOut.SetFilter(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
             _physarumOut.Bind(TextureUnit.Texture0);
 
-            _physarumProgram = ObjectTK.Shaders.ProgramFactory.Create<AgentProgram>();
-            _physarumProgram.Use();
-            _physarumProgram.Texture.Bind(0, _physarumOut, TextureAccess.ReadWrite);
-            _physarumProgram.Width.Set(_width);
-            _physarumProgram.Height.Set(_height);
-            _physarumProgram.Speed.Set(_speed);
+            _agentProgram = ObjectTK.Shaders.ProgramFactory.Create<AgentProgram>();
+            _agentProgram.Use();
+            _agentProgram.Texture.Bind(0, _physarumOut, TextureAccess.ReadWrite);
+            _agentProgram.Width.Set(_width);
+            _agentProgram.Height.Set(_height);
+            _agentProgram.Speed.Set(_speed);
 
             Agent[] a = Agent.RandomAgents(_numberOfAgents, new Vector2(_width/2, _height/2), _width/4);
             float[] f = Agent.AgentArrayToFloatArray(a);
             _agents = new Buffer<float>();
             _agents.Init(BufferTarget.ArrayBuffer, f);
-            _physarumProgram.Agents.BindBuffer<float>(_agents);
+            _agentProgram.Agents.BindBuffer<float>(_agents);
+
+            _dispersionProgram = ObjectTK.Shaders.ProgramFactory.Create<DispersionProgram>();
+            _dispersionProgram.Use();
+            _dispersionProgram.Texture.Bind(0, _physarumOut, TextureAccess.ReadWrite);
+            _dispersionProgram.Width.Set(_width);
+            _dispersionProgram.Height.Set(_height);
+            _dispersionProgram.Evaporation.Set(0.01f);
 
             _renderProgram = ObjectTK.Shaders.ProgramFactory.Create<RenderProgram>();
             _renderProgram.Use();
@@ -101,8 +110,10 @@ namespace Physarum.TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
             
-            _physarumProgram.Use();
+            _agentProgram.Use();
             AgentProgram.Dispatch(_localWorkGroupSize / 100, 1, 1);
+            _dispersionProgram.Use();
+            DispersionProgram.Dispatch(_width / 10, _height / 10, 1);
 
             _renderProgram.Use();
             _screen.DrawElements(PrimitiveType.Triangles, indexBuffer.ElementCount);

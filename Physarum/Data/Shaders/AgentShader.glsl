@@ -59,7 +59,7 @@ vec2 getVelocity(uint agent)
 	float y = getY(agent);
 	float dir = getDir(agent);
 	
-	vec2 vel = vec2(cos(dir)*Speed, sin(dir)*Speed);
+	vec2 vel = vec2(cos(dir), sin(dir))*Speed;
 
 	int xbounce = int((x+vel.x) >= 0 && (x+vel.x) < Width);
 	xbounce = (xbounce*2) - 1;
