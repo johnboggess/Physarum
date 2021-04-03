@@ -16,6 +16,7 @@ namespace PhysarumCore.Shaders
         public Uniform<float> Speed { get; set; }
         public Uniform<int> Iteration { get; set; }
         public Uniform<float> RandomDirection { get; set; }
+        public Uniform<float> DeltaTime { get; set; }
         public ShaderStorage Agents { get; set; }
     }
 }

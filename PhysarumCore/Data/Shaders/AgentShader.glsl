@@ -9,6 +9,7 @@ uniform int Height;
 uniform float Speed;
 uniform int Iteration;
 uniform float RandomDirection;
+uniform float DeltaTime;
 
 struct Agent
 {
@@ -50,7 +51,7 @@ float sampleArea(ivec2 center, int size, inout Agent agent)
 		for(int yy = -startEnd; yy <= startEnd; yy++)
 		{
 			vec4 c = imageLoad(Texture, center + ivec2(xx,yy));
-			v+= float(c.x > 0 && c.y > 0) * c.x;
+			v+= c.x;
 		}
 	}
 	return v;
@@ -107,7 +108,7 @@ vec2 getVelocity(inout Agent agent)
 	dir = dir + steerAmount;
 	dir = dir + ((rand(vec2(x+Iteration,y+Iteration))*2f - 1f) * RandomDirection); 
 
-	vec2 vel = directionToVector(dir)*Speed;
+	vec2 vel = directionToVector(dir)*Speed * DeltaTime;
 
 	int xbounce = int((x+vel.x) >= 0 && (x+vel.x) < Width);
 	xbounce = (xbounce*2) - 1;
@@ -128,8 +129,8 @@ void move(inout Agent agent)
 	vec2 vel = getVelocity(agent);
 	
 	agent.Direction = atan(vel.y, vel.x);
-	agent.Position.x = x+vel.x;
-	agent.Position.y = y+vel.y;
+	agent.Position.x = x+(vel.x);
+	agent.Position.y = y+(vel.y);
 
 }
 
@@ -148,7 +149,7 @@ void paint(inout Agent agent)
 	right = right * 20;
 
 
-	imageStore(Texture, ivec2(x,y), vec4(1,1,0,0));
+	imageStore(Texture, ivec2(x,y), vec4(1,0,1,0));
 }
 
 void main()

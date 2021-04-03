@@ -13,6 +13,8 @@ namespace PhysarumCore.Shaders
         public ImageUniform Texture { get; set; }
         public Uniform<int> Width { get; set; }
         public Uniform<int> Height { get; set; }
+        public Uniform<float> DeltaTime { get; set; }
         public Uniform<float> FadeRate { get; set; }
+        public Uniform<float> DiffusionRate { get; set; }
     }
 }

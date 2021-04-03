@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -31,9 +32,10 @@ namespace PhysarumCore
 
         int _width = 500;
         int _height = 500;
-        float _speed = 1;
-        float _fadeRate = .01f;
-        int _numberOfAgents = 100_000;
+        float _speed = 50;
+        float _fadeRate = .2f;
+        float _diffusionRate = 10f;
+        int _numberOfAgents = 1000_000;
         const int _localWorkGroupSize = 1000;
         int _iteration = 0;
         float _randomDirection = .25f;
@@ -88,6 +90,7 @@ namespace PhysarumCore
             _fadeProgram.Width.Set(_width);
             _fadeProgram.Height.Set(_height);
             _fadeProgram.FadeRate.Set(_fadeRate);
+            _fadeProgram.DiffusionRate.Set(_diffusionRate);
 
             _renderProgram = ObjectTK.Shaders.ProgramFactory.Create<RenderProgram>();
             _renderProgram.Use();
@@ -116,9 +119,13 @@ namespace PhysarumCore
             
             _agentProgram.Use();
             _agentProgram.Iteration.Set(_iteration);
+            _agentProgram.DeltaTime.Set((float)args.Time);
             AgentProgram.Dispatch(_numberOfAgents / _localWorkGroupSize, 1, 1);
-            Console.WriteLine(_agents.Content[0].Position);
+            
+            Thread.Sleep(10);
+
             _fadeProgram.Use();
+            _fadeProgram.DeltaTime.Set((float)args.Time);
             FadeProgram.Dispatch(_width / 10, _height / 10, 1);
 
             _renderProgram.Use();
