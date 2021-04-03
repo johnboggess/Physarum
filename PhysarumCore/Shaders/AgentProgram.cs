@@ -5,7 +5,7 @@ using System.Text;
 using ObjectTK.Shaders;
 using ObjectTK.Shaders.Sources;
 using ObjectTK.Shaders.Variables;
-namespace Physarum.TK.Shaders
+namespace PhysarumCore.Shaders
 {
     [ComputeShaderSource("AgentShader.Agent")]
     public class AgentProgram : ComputeProgram

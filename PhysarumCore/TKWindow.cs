@@ -11,9 +11,9 @@ using ObjectTK.Textures;
 using ObjectTK.Buffers;
 using ObjectTK.Shaders.Variables;
 
-using Physarum.TK.Shaders;
+using PhysarumCore.Shaders;
 
-namespace Physarum.TK
+namespace PhysarumCore
 {
     public class TKWindow : GameWindow
     {
@@ -22,19 +22,19 @@ namespace Physarum.TK
         Buffer<Vector3> vertexBuffer;
         Buffer<int> indexBuffer;
 
-        Texture2D _physarumOut;
+        Texture2D _textureOut;
 
         RenderProgram _renderProgram;
         AgentProgram _agentProgram;
-        DispersionProgram _dispersionProgram;
-        Buffer<float> _agents;
+        FadeProgram _fadeProgram;
+        Buffer<Agent> _agents;
 
         int _width = 500;
         int _height = 500;
         float _speed = 1;
-        float _evaporation = .01f;
-        int _numberOfAgents = 1000;
-        const int _localWorkGroupSize = 100;
+        float _fadeRate = .01f;
+        int _numberOfAgents = 100_000;
+        const int _localWorkGroupSize = 1000;
         int _iteration = 0;
         float _randomDirection = .25f;
 
@@ -63,13 +63,13 @@ namespace Physarum.TK
             indexBuffer = new Buffer<int>();
             indexBuffer.Init(BufferTarget.ElementArrayBuffer, new int[] { 0, 1, 2, 3, 2, 1 });
 
-            _physarumOut = new Texture2D(SizedInternalFormat.Rgba8, _width, _height);
-            _physarumOut.SetFilter(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
-            _physarumOut.Bind(TextureUnit.Texture0);
+            _textureOut = new Texture2D(SizedInternalFormat.Rgba8, _width, _height);
+            _textureOut.SetFilter(TextureMinFilter.Nearest, TextureMagFilter.Nearest);
+            _textureOut.Bind(TextureUnit.Texture0);
 
             _agentProgram = ObjectTK.Shaders.ProgramFactory.Create<AgentProgram>();
             _agentProgram.Use();
-            _agentProgram.Texture.Bind(0, _physarumOut, TextureAccess.ReadWrite);
+            _agentProgram.Texture.Bind(0, _textureOut, TextureAccess.ReadWrite);
             _agentProgram.Width.Set(_width);
             _agentProgram.Height.Set(_height);
             _agentProgram.Speed.Set(_speed);
@@ -77,17 +77,17 @@ namespace Physarum.TK
             _agentProgram.RandomDirection.Set(_randomDirection);
 
             Agent[] a = Agent.RandomAgents(_numberOfAgents, new Vector2(_width/2, _height/2), _width/4);
-            float[] f = Agent.AgentArrayToFloatArray(a);
-            _agents = new Buffer<float>();
-            _agents.Init(BufferTarget.ArrayBuffer, f);
-            _agentProgram.Agents.BindBuffer<float>(_agents);
 
-            _dispersionProgram = ObjectTK.Shaders.ProgramFactory.Create<DispersionProgram>();
-            _dispersionProgram.Use();
-            _dispersionProgram.Texture.Bind(0, _physarumOut, TextureAccess.ReadWrite);
-            _dispersionProgram.Width.Set(_width);
-            _dispersionProgram.Height.Set(_height);
-            _dispersionProgram.Evaporation.Set(_evaporation);
+            _agents = new Buffer<Agent>();
+            _agents.Init(BufferTarget.ArrayBuffer, a);
+            _agentProgram.Agents.BindBuffer(_agents);
+
+            _fadeProgram = ObjectTK.Shaders.ProgramFactory.Create<FadeProgram>();
+            _fadeProgram.Use();
+            _fadeProgram.Texture.Bind(0, _textureOut, TextureAccess.ReadWrite);
+            _fadeProgram.Width.Set(_width);
+            _fadeProgram.Height.Set(_height);
+            _fadeProgram.FadeRate.Set(_fadeRate);
 
             _renderProgram = ObjectTK.Shaders.ProgramFactory.Create<RenderProgram>();
             _renderProgram.Use();
@@ -117,8 +117,9 @@ namespace Physarum.TK
             _agentProgram.Use();
             _agentProgram.Iteration.Set(_iteration);
             AgentProgram.Dispatch(_numberOfAgents / _localWorkGroupSize, 1, 1);
-            _dispersionProgram.Use();
-            DispersionProgram.Dispatch(_width / 10, _height / 10, 1);
+            Console.WriteLine(_agents.Content[0].Position);
+            _fadeProgram.Use();
+            FadeProgram.Dispatch(_width / 10, _height / 10, 1);
 
             _renderProgram.Use();
             _screen.DrawElements(PrimitiveType.Triangles, indexBuffer.ElementCount);

@@ -5,14 +5,14 @@ using System.Text;
 using ObjectTK.Shaders;
 using ObjectTK.Shaders.Sources;
 using ObjectTK.Shaders.Variables;
-namespace Physarum.TK.Shaders
+namespace PhysarumCore.Shaders
 {
-    [ComputeShaderSource("DispersionShader.Dispersion")]
-    class DispersionProgram : ComputeProgram
+    [ComputeShaderSource("FadeShader.Fade")]
+    class FadeProgram : ComputeProgram
     {
         public ImageUniform Texture { get; set; }
         public Uniform<int> Width { get; set; }
         public Uniform<int> Height { get; set; }
-        public Uniform<float> Evaporation { get; set; }
+        public Uniform<float> FadeRate { get; set; }
     }
 }

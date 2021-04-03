@@ -8,7 +8,7 @@ using ObjectTK.Shaders.Sources;
 using ObjectTK.Shaders.Variables;
 using ObjectTK.Textures;
 
-namespace Physarum.TK.Shaders
+namespace PhysarumCore.Shaders
 {
     [VertexShaderSource("RenderShader.Vertex")]
     [FragmentShaderSource("RenderShader.Fragment")]

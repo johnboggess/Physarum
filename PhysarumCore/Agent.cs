@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using OpenTK.Mathematics;
-namespace Physarum.TK
+namespace PhysarumCore
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct Agent
     {
         public Vector2 Position;
         public float Direction;
         public bool Defined;
-
-        public static int SizeInFloats { get { return 4; } }
-
-        public float[] AsFloats()
-        {
-            return new float[] { Defined == true ? 1 : 0,  Position.X, Position.Y, Direction };
-        }
+        public float fs;
+        public float ls;
+        public float rs;
+        public int ID;
+        public float debug0;
+        public float debug1;
+        public float debug2;
+        public int xint;
 
         public static Agent[] RandomAgents(int numberOfAgents, Vector2 center, int positionRange)
         {
@@ -32,20 +35,6 @@ namespace Physarum.TK
 
                 Agent a = new Agent() { Defined = true, Direction = (float)dir, Position = new Vector2((float)x, (float)y) + center };
                 result[i] = a;
-            }
-
-            return result;
-        }
-
-        public static float[] AgentArrayToFloatArray(Agent[] a)
-        {
-            float[] result = new float[Agent.SizeInFloats * a.Length];
-
-            for(int i = 0; i < a.Length; i++)
-            {
-                int index = i * 4;
-                float[] data = a[i].AsFloats();
-                Array.Copy(data, 0, result, index, data.Length);
             }
 
             return result;
