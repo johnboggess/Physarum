@@ -30,15 +30,17 @@ namespace PhysarumCore
         FadeProgram _fadeProgram;
         Buffer<Agent> _agents;
 
-        int _width = 500;
-        int _height = 500;
+        int _width = 1000;
+        int _height = 1000;
         float _speed = 50;
         float _fadeRate = .2f;
         float _diffusionRate = 10f;
         int _numberOfAgents = 1000_000;
         const int _localWorkGroupSize = 1000;
         int _iteration = 0;
-        float _randomDirection = .25f;
+        float _turnSpeed = 15;
+        float _jitter = .5f;
+        Color4 _color = Color4.Magenta;
 
         public TKWindow() : base(GameWindowSettings.Default, NativeWindowSettings.Default)
         {
@@ -76,7 +78,9 @@ namespace PhysarumCore
             _agentProgram.Height.Set(_height);
             _agentProgram.Speed.Set(_speed);
             _agentProgram.Iteration.Set(_iteration);
-            _agentProgram.RandomDirection.Set(_randomDirection);
+            _agentProgram.TurnSpeed.Set(_turnSpeed);
+            _agentProgram.Jitter.Set(_jitter);
+            _agentProgram.AgentColor.Set(new Vector4(_color.R, _color.G, _color.B, _color.A));
 
             Agent[] a = Agent.RandomAgents(_numberOfAgents, new Vector2(_width/2, _height/2), _width/4);
 

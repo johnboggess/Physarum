@@ -8,8 +8,10 @@ uniform int Width;
 uniform int Height;
 uniform float Speed;
 uniform int Iteration;
-uniform float RandomDirection;
+uniform float TurnSpeed;
+uniform float Jitter;
 uniform float DeltaTime;
+uniform vec4 AgentColor;
 
 struct Agent
 {
@@ -51,7 +53,7 @@ float sampleArea(ivec2 center, int size, inout Agent agent)
 		for(int yy = -startEnd; yy <= startEnd; yy++)
 		{
 			vec4 c = imageLoad(Texture, center + ivec2(xx,yy));
-			v+= c.x;
+			v+= (c.x+c.y+c.z)/3f;
 		}
 	}
 	return v;
@@ -83,32 +85,30 @@ vec2 getVelocity(inout Agent agent)
 	agent.ls = ls;
 	agent.rs = rs;
 
-	/*int size = 13;
-	int startEnd = size/2;
-	float s = sampleArea(ivec2(x,y) + ivec2(forward), 7, agent);
+	float randomSteer = rand(vec2(x+Iteration,y+Iteration));
 
-	if(s > 0)
-	{
-		for(int xx = -startEnd; xx <= startEnd; xx++)
-		{
-			for(int yy = -startEnd; yy <= startEnd; yy++)
-			{
-				imageStore(Texture, ivec2(x,y) + ivec2(forward) + ivec2(xx,yy), vec4(s*2f,0,0,0));
-				imageStore(Texture, ivec2(x,y) + ivec2(left) + ivec2(xx,yy), vec4(1,0,0,0));
-				imageStore(Texture, ivec2(x,y) + ivec2(right) + ivec2(xx,yy), vec4(0,1,0,0));
-			}
-		}
-	}*/
+	/*bool goForward =  fs > ls && fs > rs;
+	bool goRandom = fs < ls && fs < rs;
+	bool goLeft = ls > rs;
+	bool goRight = rs > ls;
 
+	if(goForward)
+		dir += 0;
+	else if(goRandom)
+		dir += ((randomSteer*2f) - 1f) * TurnSpeed * DeltaTime;
+	else if(goLeft)
+		dir += randomSteer * TurnSpeed * DeltaTime;
+	else if(goRight)
+		dir -= randomSteer * TurnSpeed * DeltaTime;*/
 
 	vec2 steerVec = normalize(forward)*fs + normalize(left)*ls + normalize(right)*rs;
 	float steerAmount = atan(steerVec.y, steerVec.x) - atan(forward.y, forward.x);
 	steerAmount = steerAmount * float(steerVec.x != 0 || steerVec.y != 0);
 
-	dir = dir + steerAmount;
-	dir = dir + ((rand(vec2(x+Iteration,y+Iteration))*2f - 1f) * RandomDirection); 
+	float jitter = (randomSteer*2f - 1f) * Jitter;
+	dir += (steerAmount + jitter) * TurnSpeed * DeltaTime;
 
-	vec2 vel = directionToVector(dir)*Speed * DeltaTime;
+	vec2 vel = directionToVector(dir) * Speed * DeltaTime;
 
 	int xbounce = int((x+vel.x) >= 0 && (x+vel.x) < Width);
 	xbounce = (xbounce*2) - 1;
@@ -149,7 +149,7 @@ void paint(inout Agent agent)
 	right = right * 20;
 
 
-	imageStore(Texture, ivec2(x,y), vec4(1,0,1,0));
+	imageStore(Texture, ivec2(x,y), AgentColor);
 }
 
 void main()

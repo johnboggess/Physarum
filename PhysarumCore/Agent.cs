@@ -30,8 +30,8 @@ namespace PhysarumCore
             {
                 double dir = (random.NextDouble() * Math.PI * 2d);
                 double dist = random.NextDouble() * positionRange;
-                double x = Math.Cos(dir) * dist;
-                double y = Math.Sin(dir) * dist;
+                double x = Math.Cos(-dir) * dist;
+                double y = Math.Sin(-dir) * dist;
 
                 Agent a = new Agent() { Defined = true, Direction = (float)dir, Position = new Vector2((float)x, (float)y) + center };
                 result[i] = a;
