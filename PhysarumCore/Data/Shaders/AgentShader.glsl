@@ -91,20 +91,6 @@ vec2 getVelocity(inout Agent agent)
 
 	float randomSteer = rand(vec2(x+Iteration,y+Iteration));
 
-	/*bool goForward =  fs > ls && fs > rs;
-	bool goRandom = fs < ls && fs < rs;
-	bool goLeft = ls > rs;
-	bool goRight = rs > ls;
-
-	if(goForward)
-		dir += 0;
-	else if(goRandom)
-		dir += ((randomSteer*2f) - 1f) * TurnSpeed * DeltaTime;
-	else if(goLeft)
-		dir += randomSteer * TurnSpeed * DeltaTime;
-	else if(goRight)
-		dir -= randomSteer * TurnSpeed * DeltaTime;*/
-
 	vec2 steerVec = normalize(forward)*fs + normalize(left)*ls + normalize(right)*rs;
 	float steerAmount = atan(steerVec.y, steerVec.x) - atan(forward.y, forward.x);
 	steerAmount = steerAmount * float(steerVec.x != 0 || steerVec.y != 0);
@@ -113,7 +99,7 @@ vec2 getVelocity(inout Agent agent)
 	float jitter = (randomSteer*2f - 1f) * settings.Jitter;
 	dir += (steerAmount + jitter);
 
-	vec2 vel = directionToVector(dir);// * Speed * DeltaTime;
+	vec2 vel = directionToVector(dir) * settings.Speed;// * DeltaTime;
 
 	int xbounce = int((x+vel.x) >= 0 && (x+vel.x) < Width);
 	xbounce = (xbounce*2) - 1;

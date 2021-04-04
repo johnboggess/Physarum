@@ -33,15 +33,11 @@ namespace PhysarumCore
 
         int _width = 1000;
         int _height = 1000;
-        float _speed = 50;
         float _fadeRate = .2f;
         float _diffusionRate = 10f;
         int _numberOfAgents = 100_000;
         const int _localWorkGroupSize = 1000;
         int _iteration = 0;
-        float _steerStrength = 1;
-        float _jitter = .5f;
-        Color4 _color = Color4.Magenta;
 
         public TKWindow() : base(GameWindowSettings.Default, NativeWindowSettings.Default)
         {
