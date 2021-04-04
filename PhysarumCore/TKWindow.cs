@@ -29,12 +29,11 @@ namespace PhysarumCore
         AgentProgram _agentProgram;
         FadeProgram _fadeProgram;
         Buffer<Agent> _agents;
-        Buffer<AgentSettings> _settings;
+        Buffer<AgentSettings> _agentSettings;
+        Buffer<FadeSettings> _fadeSettings;
 
         int _width = 1000;
         int _height = 1000;
-        float _fadeRate = .2f;
-        float _diffusionRate = 10f;
         int _numberOfAgents = 100_000;
         const int _localWorkGroupSize = 1000;
         int _iteration = 0;
@@ -81,17 +80,19 @@ namespace PhysarumCore
             _agents.Init(BufferTarget.ArrayBuffer, a);
             _agentProgram.Agents.BindBuffer(_agents);
 
-            _settings = new Buffer<AgentSettings>();
-            _settings.Init(BufferTarget.UniformBuffer, new AgentSettings[] { AgentSettings.Default() });
-            _agentProgram.Settings.BindBuffer(_settings);
+            _agentSettings = new Buffer<AgentSettings>();
+            _agentSettings.Init(BufferTarget.UniformBuffer, new AgentSettings[] { AgentSettings.Default() });
+            _agentProgram.Settings.BindBuffer(_agentSettings);
 
             _fadeProgram = ObjectTK.Shaders.ProgramFactory.Create<FadeProgram>();
             _fadeProgram.Use();
             _fadeProgram.Texture.Bind(0, _textureOut, TextureAccess.ReadWrite);
             _fadeProgram.Width.Set(_width);
             _fadeProgram.Height.Set(_height);
-            _fadeProgram.FadeRate.Set(_fadeRate);
-            _fadeProgram.DiffusionRate.Set(_diffusionRate);
+
+            _fadeSettings = new Buffer<FadeSettings>();
+            _fadeSettings.Init(BufferTarget.UniformBuffer, new FadeSettings[] { FadeSettings.Default() });
+            _fadeProgram.Settings.BindBuffer(_fadeSettings);
 
             _renderProgram = ObjectTK.Shaders.ProgramFactory.Create<RenderProgram>();
             _renderProgram.Use();

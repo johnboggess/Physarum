@@ -15,7 +15,7 @@ namespace PhysarumCore
 
         public static AgentSettings Default()
         {
-            return new AgentSettings { Speed = 1/*50*/, SteerStrength = 2, Jitter = .5f, AgentColor = new Vector4(Color4.Magenta.R, Color4.Magenta.G, Color4.Magenta.B, Color4.Magenta.A) };
+            return new AgentSettings { Speed = 1/*50*/, SteerStrength = 1, Jitter = .5f, AgentColor = new Vector4(Color4.Magenta.R, Color4.Magenta.G, Color4.Magenta.B, Color4.Magenta.A) };
         }
     }
 }

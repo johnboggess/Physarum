@@ -5,8 +5,12 @@ layout (binding=0, rgba8) uniform image2D Texture;
 uniform int Width;
 uniform int Height;
 uniform float DeltaTime;
-uniform float FadeRate;
-uniform float DiffusionRate;
+
+layout(std140, binding = 0) uniform Settings
+{
+	float FadeRate;
+    float DiffusionRate;
+} settings;
 
 layout (local_size_x = 10, local_size_y = 10) in;
 void main()
@@ -24,8 +28,8 @@ void main()
 
 	sum = sum/9f;
 	
-	//c = mix(c, sum, DiffusionRate * DeltaTime);
-	c = c - .01;//(FadeRate * DeltaTime);
+	c = mix(c, sum, settings.DiffusionRate);// * DeltaTime);
+	c = c - settings.FadeRate;//.01;//(FadeRate * DeltaTime);
 	c = max(c, vec4(0,0,0,0));
 	imageStore(Texture, ivec2(gl_GlobalInvocationID.xy), c);
 }
