@@ -24,8 +24,8 @@ void main()
 
 	sum = sum/9f;
 	
-	c = mix(c, sum, DiffusionRate * DeltaTime);
-	c = c - (FadeRate * DeltaTime);
+	//c = mix(c, sum, DiffusionRate * DeltaTime);
+	c = c - .01;//(FadeRate * DeltaTime);
 	c = max(c, vec4(0,0,0,0));
 	imageStore(Texture, ivec2(gl_GlobalInvocationID.xy), c);
 }

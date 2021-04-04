@@ -6,12 +6,8 @@ const float pi = 3.141592654;
 layout (binding=0, rgba8) uniform image2D Texture;
 uniform int Width;
 uniform int Height;
-uniform float Speed;
 uniform int Iteration;
-uniform float TurnSpeed;
-uniform float Jitter;
 uniform float DeltaTime;
-uniform vec4 AgentColor;
 
 struct Agent
 {
@@ -27,7 +23,15 @@ struct Agent
 	float debug2;
 };
 
-layout(std430, binding = 3) buffer Agents
+layout(std140, binding = 1) uniform Settings
+{
+	float Speed;
+	float SteerStrength;
+	float Jitter;
+	vec4 AgentColor;
+} settings;
+
+layout(std430, binding = 2) buffer Agents
 {
     Agent agents[];
 };
@@ -105,10 +109,11 @@ vec2 getVelocity(inout Agent agent)
 	float steerAmount = atan(steerVec.y, steerVec.x) - atan(forward.y, forward.x);
 	steerAmount = steerAmount * float(steerVec.x != 0 || steerVec.y != 0);
 
-	float jitter = (randomSteer*2f - 1f) * Jitter;
-	dir += (steerAmount + jitter) * TurnSpeed * DeltaTime;
+	steerAmount = steerAmount * settings.SteerStrength;
+	float jitter = (randomSteer*2f - 1f) * settings.Jitter;
+	dir += (steerAmount + jitter);
 
-	vec2 vel = directionToVector(dir) * Speed * DeltaTime;
+	vec2 vel = directionToVector(dir);// * Speed * DeltaTime;
 
 	int xbounce = int((x+vel.x) >= 0 && (x+vel.x) < Width);
 	xbounce = (xbounce*2) - 1;
@@ -149,7 +154,7 @@ void paint(inout Agent agent)
 	right = right * 20;
 
 
-	imageStore(Texture, ivec2(x,y), AgentColor);
+	imageStore(Texture, ivec2(x,y), settings.AgentColor);
 }
 
 void main()
