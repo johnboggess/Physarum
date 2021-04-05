@@ -18,6 +18,7 @@ namespace PhysarumCore
 {
     public class TKWindow : GameWindow
     {
+        public AgentSettings AgentSettings;
 
         Texture2D _textureOut;
 
@@ -25,6 +26,7 @@ namespace PhysarumCore
         AgentProgram _agentProgram;
         FadeProgram _fadeProgram;
 
+        object _lock = new object();
         int _width = 1000;
         int _height = 1000;
         int _numberOfAgents = 100_000;
@@ -44,6 +46,8 @@ namespace PhysarumCore
         protected override void OnLoad()
         {
             GL.ClearColor(Color4.CornflowerBlue);
+
+            AgentSettings = AgentSettings.Default();
 
             _renderProgram = RenderProgram.Create();
 
@@ -74,6 +78,7 @@ namespace PhysarumCore
             _agentProgram.Use();
             _agentProgram.Iteration.Set(_iteration);
             _agentProgram.DeltaTime.Set((float)args.Time);
+            _agentProgram.AgentSettings = AgentSettings;
             AgentProgram.Dispatch(_numberOfAgents / _localWorkGroupSize, 1, 1);
             
             Thread.Sleep(10);

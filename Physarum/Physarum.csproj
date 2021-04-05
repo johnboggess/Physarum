@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PhysarumCore\PhysarumCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Data\Shaders\AgentShader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

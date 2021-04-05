@@ -139,8 +139,8 @@ void paint(inout Agent agent)
 	vec2 right = directionToVector(agent.Direction-pi/4f);
 	right = right * 20;
 
-
-	imageStore(Texture, ivec2(x,y), settings.AgentColor);
+	vec4 c = imageLoad(Texture, ivec2(x,y));
+	imageStore(Texture, ivec2(x,y), settings.AgentColor+c);
 }
 
 void main()

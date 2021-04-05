@@ -18,15 +18,17 @@ void main()
 	vec4 c = imageLoad(Texture, ivec2(gl_GlobalInvocationID.xy));
 
 	vec4 sum = vec4(0,0,0,0);
-	for(int x = -1; x < 2; x++)
+	ivec2 kernel = ivec2(3,3);
+	ivec2 startEnd = kernel / 2;
+	for(int x = -startEnd.x; x <= startEnd.x; x++)
 	{
-		for(int y = -1; y < 2; y++)
+		for(int y = -startEnd.y; y <= startEnd.y; y++)
 		{
 			sum += imageLoad(Texture, ivec2(gl_GlobalInvocationID.xy) + ivec2(x,y));
 		}
 	}
 
-	sum = sum/9f;
+	sum = sum/(kernel.x*kernel.y);
 	
 	c = mix(c, sum, settings.DiffusionRate);// * DeltaTime);
 	c = c - settings.FadeRate;//.01;//(FadeRate * DeltaTime);

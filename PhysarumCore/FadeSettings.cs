@@ -11,6 +11,6 @@ namespace PhysarumCore
         public float Padding0;
         public float Padding1;
 
-        public static FadeSettings Default() { return new FadeSettings() { FadeRate = .01f, DiffusionRate = .1f/*10f*/ }; }
+        public static FadeSettings Default() { return new FadeSettings() { FadeRate = .01f, DiffusionRate = .7f/*10f*/ }; }
     }
 }
