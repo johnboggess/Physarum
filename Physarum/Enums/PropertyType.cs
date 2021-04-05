@@ -10,5 +10,8 @@ namespace Physarum.Enums
         AgentSteerStrength,
         AgentJitter,
         AgentColor,
+        FadeRate,
+        DiffusionRate,
+        DiffusionKernel
     }
 }

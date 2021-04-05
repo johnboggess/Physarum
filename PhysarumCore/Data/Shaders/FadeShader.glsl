@@ -10,6 +10,7 @@ layout(std140, binding = 0) uniform Settings
 {
 	float FadeRate;
     float DiffusionRate;
+	ivec2 Kernel;
 } settings;
 
 layout (local_size_x = 10, local_size_y = 10) in;
@@ -18,8 +19,7 @@ void main()
 	vec4 c = imageLoad(Texture, ivec2(gl_GlobalInvocationID.xy));
 
 	vec4 sum = vec4(0,0,0,0);
-	ivec2 kernel = ivec2(3,3);
-	ivec2 startEnd = kernel / 2;
+	ivec2 startEnd = settings.Kernel / 2;
 	for(int x = -startEnd.x; x <= startEnd.x; x++)
 	{
 		for(int y = -startEnd.y; y <= startEnd.y; y++)
@@ -28,7 +28,7 @@ void main()
 		}
 	}
 
-	sum = sum/(kernel.x*kernel.y);
+	sum = sum/(settings.Kernel.x*settings.Kernel.y);
 	
 	c = mix(c, sum, settings.DiffusionRate);// * DeltaTime);
 	c = c - settings.FadeRate;//.01;//(FadeRate * DeltaTime);

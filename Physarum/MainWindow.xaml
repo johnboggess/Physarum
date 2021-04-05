@@ -16,5 +16,8 @@
         <controls:PhyasrumSlider PropertyType="AgentSpeed" ValueChanged="{Binding PropertyChangedCmd}" Margin="10" PropertyName="Agent Speed" Min="-1" Max="1" Value="1"/>
         <controls:PhyasrumSlider PropertyType="AgentSteerStrength" ValueChanged="{Binding PropertyChangedCmd}" Margin="10" PropertyName="Steer Strength" Min="-1" Max="1" Value="1"/>
         <controls:PhyasrumSlider PropertyType="AgentJitter" ValueChanged="{Binding PropertyChangedCmd}" Margin="10" PropertyName="Jitter" Min="0" Max="6.18" Value=".5"/>
+        
+        <controls:PhyasrumSlider PropertyType="FadeRate" ValueChanged="{Binding PropertyChangedCmd}" Margin="10" PropertyName="Fade Rate" Min="0" Max="1" Value=".01"/>
+        <controls:PhyasrumSlider PropertyType="DiffusionRate" ValueChanged="{Binding PropertyChangedCmd}" Margin="10" PropertyName="Diffusion Rate" Min="0" Max="1" Value=".7"/>
     </StackPanel>
 </Window>

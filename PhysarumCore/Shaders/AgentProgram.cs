@@ -25,7 +25,6 @@ namespace PhysarumCore.Shaders
         public ShaderStorage Agents { get; set; }
 
         private AgentSettings _agentSettings;
-
         public AgentSettings AgentSettings
         {
             get { return _agentSettings; }

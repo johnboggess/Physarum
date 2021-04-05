@@ -19,6 +19,7 @@ namespace PhysarumCore
     public class TKWindow : GameWindow
     {
         public AgentSettings AgentSettings;
+        public FadeSettings FadeSettings;
 
         Texture2D _textureOut;
 
@@ -48,6 +49,7 @@ namespace PhysarumCore
             GL.ClearColor(Color4.CornflowerBlue);
 
             AgentSettings = AgentSettings.Default();
+            FadeSettings = FadeSettings.Default();
 
             _renderProgram = RenderProgram.Create();
 
@@ -85,6 +87,7 @@ namespace PhysarumCore
 
             _fadeProgram.Use();
             _fadeProgram.DeltaTime.Set((float)args.Time);
+            _fadeProgram.FadeSettings = FadeSettings;
             FadeProgram.Dispatch(_width / 10, _height / 10, 1);
 
             _renderProgram.Use();

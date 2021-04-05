@@ -47,6 +47,10 @@ namespace Physarum.ViewModels
                 window.AgentSettings.SteerStrength = args.Value;
             else if (args.PropertyType == Enums.PropertyType.AgentJitter)
                 window.AgentSettings.Jitter = args.Value;
+            else if (args.PropertyType == Enums.PropertyType.FadeRate)
+                window.FadeSettings.FadeRate = args.Value;
+            else if (args.PropertyType == Enums.PropertyType.DiffusionRate)
+                window.FadeSettings.DiffusionRate = args.Value;
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]

@@ -22,7 +22,24 @@ namespace PhysarumCore.Shaders
         public UniformBuffer Settings { get; set; }
 
 
-        public FadeSettings FadeSettings;
+        private FadeSettings _fadeSettings;
+        public FadeSettings FadeSettings
+        {
+            get { return _fadeSettings; }
+            set
+            {
+                _fadeSettings = value;
+                if (_FadeSettingsBuffer == null)
+                {
+                    _FadeSettingsBuffer = new Buffer<FadeSettings>();
+                    _FadeSettingsBuffer.Init(BufferTarget.UniformBuffer, new FadeSettings[] { _fadeSettings });
+                    Settings.BindBuffer(_FadeSettingsBuffer);
+                }
+                _FadeSettingsBuffer.SubData(BufferTarget.UniformBuffer, new FadeSettings[] { _fadeSettings }, 0);
+            }
+        }
+
+
         internal Buffer<FadeSettings> _FadeSettingsBuffer;
 
         public static FadeProgram Create(int width, int height, Texture2D texture, FadeSettings settings)
@@ -33,9 +50,7 @@ namespace PhysarumCore.Shaders
             _fadeProgram.Width.Set(width);
             _fadeProgram.Height.Set(height);
 
-            _fadeProgram._FadeSettingsBuffer = new Buffer<FadeSettings>();
-            _fadeProgram._FadeSettingsBuffer.Init(BufferTarget.UniformBuffer, new FadeSettings[] { settings });
-            _fadeProgram.Settings.BindBuffer(_fadeProgram._FadeSettingsBuffer);
+            _fadeProgram.FadeSettings = settings;
 
             return _fadeProgram;
         }
