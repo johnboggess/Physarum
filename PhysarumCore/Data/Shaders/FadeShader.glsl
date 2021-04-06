@@ -9,6 +9,7 @@ uniform float DeltaTime;
 layout(std140, binding = 0) uniform Settings
 {
 	float FadeRate;
+	bool AdditiveFade;
     float DiffusionRate;
 	ivec2 Kernel;
 } settings;
@@ -31,7 +32,10 @@ void main()
 	sum = sum/(settings.Kernel.x*settings.Kernel.y);
 	
 	c = mix(c, sum, settings.DiffusionRate);// * DeltaTime);
-	c = c - settings.FadeRate;//.01;//(FadeRate * DeltaTime);
+	if(settings.AdditiveFade)
+		c = c - settings.FadeRate;//.01;//(FadeRate * DeltaTime);
+	else
+		c = c * settings.FadeRate;
 	c = max(c, vec4(0,0,0,0));
 	imageStore(Texture, ivec2(gl_GlobalInvocationID.xy), c);
 }

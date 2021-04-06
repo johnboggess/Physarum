@@ -13,6 +13,8 @@ using System.Windows.Shapes;
 
 using Physarum.Enums;
 using Physarum.Models;
+
+using PhysarumCore;
 namespace Physarum.UserControls
 {
     /// <summary>
