@@ -103,6 +103,7 @@ namespace Physarum.UserControls
             InitializeComponent();
 
             slider.ValueChanged += Slider_ValueChanged;
+            slider.TickFrequency = 1d/100d;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
