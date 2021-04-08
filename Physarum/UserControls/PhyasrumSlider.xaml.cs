@@ -22,7 +22,6 @@ namespace Physarum.UserControls
     /// </summary>
     public partial class PhyasrumSlider : UserControl
     {
-
         public string PropertyName
         {
             get { return (string)GetValue(PropertyNameProperty); }
@@ -48,6 +47,11 @@ namespace Physarum.UserControls
             get { return (float)GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); slider.Value = value; }
         }
+        public uint DecimalPlaces
+        {
+            get { return (uint)GetValue(DecimalPlacesProperty); }
+            set { SetValue(DecimalPlacesProperty, value); }
+        }
         public ICommand ValueChanged
         {
             get { return (ICommand)GetValue(ValueChangedProperty); }
@@ -64,6 +68,8 @@ namespace Physarum.UserControls
                                   new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnMaxChanged)));
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(float), typeof(PhyasrumSlider),
                                   new FrameworkPropertyMetadata(default(float), FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnValueChanged)));
+        public static readonly DependencyProperty DecimalPlacesProperty = DependencyProperty.Register(nameof(DecimalPlaces), typeof(uint), typeof(PhyasrumSlider),
+                                  new FrameworkPropertyMetadata(uint.MaxValue, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnDecimalPlacesChanged)));
         public static readonly DependencyProperty ValueChangedProperty = DependencyProperty.Register(nameof(ValueChanged), typeof(ICommand), typeof(PhyasrumSlider),
                                   new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnValueChangedChanged)));
 
@@ -92,6 +98,16 @@ namespace Physarum.UserControls
             PhyasrumSlider control = (PhyasrumSlider)source;
             control.Value = (float)e.NewValue;
         }
+        private static void OnDecimalPlacesChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
+        {
+            PhyasrumSlider control = (PhyasrumSlider)source;
+            control.DecimalPlaces = (uint)e.NewValue;
+
+            control.lbl_Value.ContentStringFormat = $"N{control.DecimalPlaces}";
+            control.lbl_Min.ContentStringFormat = $"N{control.DecimalPlaces}";
+            control.lbl_Max.ContentStringFormat = $"N{control.DecimalPlaces}";
+            control.slider.TickFrequency = 1d / Math.Pow(10, control.DecimalPlaces);
+        }
         private static void OnValueChangedChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
             PhyasrumSlider control = (PhyasrumSlider)source;
@@ -108,7 +124,13 @@ namespace Physarum.UserControls
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            UpdateLabel(e.NewValue);
             ValueChanged?.Execute(new ValueChangedArgs() { PropertyType = PropertyType, Value = (float)e.NewValue });
+        }
+
+        private void UpdateLabel(double value)
+        {
+            lbl_Value.Content = value;
         }
     }
 }

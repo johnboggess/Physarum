@@ -28,6 +28,8 @@ layout(std140, binding = 1) uniform Settings
 	float Speed;
 	float SteerStrength;
 	float Jitter;
+	float SensorDistance;
+	float SensorAngle;
 	vec4 AgentColor;
 } settings;
 
@@ -71,13 +73,13 @@ vec2 getVelocity(inout Agent agent)
 	float dir = agent.Direction;
 
 	vec2 forward = directionToVector(dir);
-	forward = forward * 20;
+	forward = forward * settings.SensorDistance;
 	
-	vec2 left = directionToVector(dir+pi/4f);
-	left = left * 20;
+	vec2 left = directionToVector(dir+settings.SensorAngle);
+	left = left * settings.SensorDistance;
 	
-	vec2 right = directionToVector(dir-pi/4f);
-	right = right * 20;
+	vec2 right = directionToVector(dir-settings.SensorAngle);
+	right = right * settings.SensorDistance;
 
 
 	float fs = sampleArea(ivec2(x,y) + ivec2(forward), 7, agent);

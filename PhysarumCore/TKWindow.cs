@@ -48,7 +48,6 @@ namespace PhysarumCore
         {
             GL.ClearColor(Color4.CornflowerBlue);
 
-            AgentSettings = AgentSettings.Default();
             FadeSettings = FadeSettings.Default();
 
             _renderProgram = RenderProgram.Create();
